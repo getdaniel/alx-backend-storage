@@ -6,7 +6,7 @@ import requests
 from typing import Callable
 
 
-def count(method: Callable):
+def count(method: Callable) -> Callable:
     """ Count the call to request."""
     redi = redis.Redis()
 
