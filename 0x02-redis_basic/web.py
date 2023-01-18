@@ -9,7 +9,7 @@ from typing import Callable
 redi = redis.Redis()
 
 
-def counter(method: Callable) -> Callable:
+def page_counter(method: Callable) -> Callable:
     """ Count the call to request."""
     @wraps(method)
     def wrapper(urli) -> str:
@@ -27,7 +27,7 @@ def counter(method: Callable) -> Callable:
     return wrapper
 
 
-@counter
+@page_counter
 def get_page(url: str) -> str:
     """ Impelements core function of get page which is accessed."""
     return requests.get(url).text
