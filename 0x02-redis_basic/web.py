@@ -6,10 +6,11 @@ import requests
 from typing import Callable
 
 
+redi = redis.Redis()
+
+
 def count(method: Callable) -> Callable:
     """ Count the call to request."""
-    redi = redis.Redis()
-
     @wraps(method)
     def wrapper(urli) -> str:
         """ Implements the functionality of call requests."""
