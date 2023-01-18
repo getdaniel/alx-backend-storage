@@ -11,7 +11,7 @@ def page_counter(method: Callable) -> Callable:
     redi = redis.Redis()
 
     @wraps(method)
-    def wrapper(urli) -> str:
+    def wrapper(url) -> str:
         """ Implements the functionality of call requests."""
         redi.incr(f'count:{url}')
         expire_count = redi.get(f'cached:{url}')
