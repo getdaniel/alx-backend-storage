@@ -6,11 +6,10 @@ import requests
 from typing import Callable
 
 
-redi = redis.Redis()
-
-
 def page_counter(method: Callable) -> Callable:
     """ Count the call to request."""
+    redi = redis.Redis()
+
     @wraps(method)
     def wrapper(urli) -> str:
         """ Implements the functionality of call requests."""
@@ -19,7 +18,7 @@ def page_counter(method: Callable) -> Callable:
         if expire_count:
             return expire_count.decode('utf-8')
         expire_count = method(url)
-        redi.set(f'count:{}', 0)
+        redi.set(f'count:{url}', 0)
         redi.setex(f'cached:{url}', 10, expire_count)
 
         return expire_count
