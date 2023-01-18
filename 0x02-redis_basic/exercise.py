@@ -19,6 +19,7 @@ def count_calls(method: Callable) -> Callable:
 
     return wrapper
 
+
 def call_history(method: Callable) -> Callable:
     """ Implements a system call history"""
     @wraps(method)
@@ -32,8 +33,9 @@ def call_history(method: Callable) -> Callable:
         if isinstance(self._redis, redis.Redis):
             self._redis.rpush(out_key, output)
         return output
-    
+
     return wrapper
+
 
 def replay(fn: Callable) -> None:
     """ Display the history of calls."""
@@ -61,12 +63,11 @@ def replay(fn: Callable) -> None:
         ))
 
 
-
 class Cache:
     """ Implement cache strategy with Redis."""
     def __init__(self) -> None:
         """Initializes a Cache instance."""
-        self._redis =  redis.Redis()
+        self._redis = redis.Redis()
         self._redis.flushdb(True)
 
     @count_calls
