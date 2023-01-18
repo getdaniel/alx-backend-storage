@@ -6,6 +6,9 @@ import requests
 from typing import Callable
 
 
+redi = redis.Redis()
+
+
 def page_counter(method: Callable) -> Callable:
     """ Count the call to request."""
     redi = redis.Redis()
