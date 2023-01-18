@@ -13,13 +13,13 @@ def count(method: Callable):
     @wraps(method)
     def wrapper(urli) -> str:
         """ Implements the functionality of call requests."""
-        redi.incr(f"count:{url}")
-        expire_count = redi.get(f"cached:{url}")
+        redi.incr(f'count:{url}')
+        expire_count = redi.get(f'cached:{url}')
         if expire_count:
             return expire_count.decode('utf-8')
         expire_count = method(url)
-        redi.set(f"count:{}", 0)
-        redi.setex(f"cached:{url}", 10, expire_count)
+        redi.set(f'count:{}', 0)
+        redi.setex(f'cached:{url}', 10, expire_count)
 
         return expire_count
 
