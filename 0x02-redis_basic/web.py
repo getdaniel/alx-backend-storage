@@ -1,40 +1,20 @@
 #!/usr/bin/env python3
 """ Implementing an expiring web cache and tracker
-    obtain the HTML content of a particular URL and returns it.
-"""
-import requests
+    obtain the HTML content of a particular URL and returns it """
 import redis
-import json
-from functools import wraps
+import requests
 
-r = redis.Redis()
 
-def cache(ex=10):
-    """ Implement cach function."""
-    def decorator(func):
-        """" Implement the decoration functionality."""
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            """ Wrapper functinality."""
-            url = args[0]
-            # Check if the URL is already cached
-            cached_response = r.get(url)
-            if cached_response:
-                # If the URL is cached, return the cached response
-                print(f"Returning cached response for {url}")
-                r.incr(f"count:{url}")
-                return json.loads(cached_response)
-            result = func(*args, **kwargs)
-            r.set(url, json.dumps(result), ex=ex)
-            r.incr(f"count:{url}")
-            return result
-        return wrapper
-    return decorator
+redi = redis.Redis()
+count = 0
 
-@cache(ex=10)
+
 def get_page(url: str) -> str:
-    """If the URL is not cached, send a request to the URL."""
+    """ Impelements core function of get page which is accessed."""
+    redi.set(f"cached:{url}", count)
     response = requests.get(url)
+    redi.incr(f"count:{url}")
+    redi.setex(f"cached:{url}", 10, redi.get(f"cached:{url}"))
     return response.text
 
 
